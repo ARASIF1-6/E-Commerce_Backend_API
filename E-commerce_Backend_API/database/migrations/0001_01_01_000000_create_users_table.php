@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('location')->nullable();
             $table->string('country')->nullable();
             $table->string('type')->default('user');
-            $table->string('filename')->nullable();
+            $table->string('image')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

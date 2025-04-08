@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 // use App\Models\User;
 use App\Models\WishList;
 use App\Models\User;
+use App\Http\Requests\WishListRegisterRequest;
 
 class WishListController extends Controller
 {
@@ -16,7 +17,7 @@ class WishListController extends Controller
         $this->user = new User();
     }
 
-    public function store(Request $request){
+    public function store(WishListRegisterRequest $request){
         
         // $product = Product::findorFail($request->product_id);
         // $user = User::findorFail($request->user_id);
@@ -25,17 +26,15 @@ class WishListController extends Controller
 
         // return "succesfull";
 
-        $request->validate([
-            'product_id' => 'required|exists:products,id',
-        ]);
+        $validateData = $request->validated();
 
-        $user = $this->user->where('email', $request->email)->first();
+        $user = $this->user->where('email', $validateData['email'])->first();
 
         if (!$user) {
             return response()->json(['message' => 'User not found'], 404);
         }
         else{
-            $exists = WishList::where('user_id', $user->id)->where('product_id', $request->product_id)->exists();
+            $exists = WishList::where('user_id', $user->id)->where('product_id', $validateData['product_id'])->exists();
 
             if ($exists) {
                 return response()->json(['message' => 'Already in wishlist'], 200);
@@ -43,7 +42,7 @@ class WishListController extends Controller
             else{
                 $wishlist = WishList::create([
                     'user_id' => $user->id,
-                    'product_id' => $request->product_id,
+                    'product_id' => $validateData['product_id'],
                 ]);
         
                 return response()->json(['message' => 'Added to wishlist successfully!', 'data' => $wishlist], 201);
@@ -69,7 +68,7 @@ class WishListController extends Controller
             return response()->json(['message' => 'User not found'], 404);
         }
         else{
-            $wishlist = WishList::where('user_id', $user->id)->delete();
+            $wishlist = WishList::where('user_id', $user->id)->where('product_id', $request->product_id)->delete();
             if($wishlist){
                 return response()->json(['message' => 'Product delete from wishlist successfully'], 201);
             }

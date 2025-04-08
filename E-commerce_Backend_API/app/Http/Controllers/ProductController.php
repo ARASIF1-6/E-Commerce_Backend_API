@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
@@ -19,10 +20,19 @@ class ProductController extends Controller
             'description' => 'required|string', // Changed from nullable
             'price' => 'required|numeric|min:0.01',
             'stock' => 'required|integer|min:0',
-            'category_id' => 'required|exists:categories,id' // Changed from nullable
+            'category_id' => 'required|exists:categories,id', // Changed from nullable
+            'image' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048'
         ]);
-    
+
+        if ($request->hasFile('image')) {
+            $path = $request->file('image')->store('products', 'public');
+            $imageUrl = asset('storage/' . $path);
+            $validated['image'] = $imageUrl;
+        }
+
         $product = Product::create($validated);
+
+
         return response()->json($product, 201);
     }
 

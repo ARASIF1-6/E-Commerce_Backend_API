@@ -6,6 +6,8 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\WishList\WishListController;
+use App\Http\Controllers\Cart\CartController;
+use App\Http\Controllers\Payment\PaymentController;
 
 Route::apiResource('products', ProductController::class);
 Route::apiResource('categories', CategoryController::class);
@@ -30,4 +32,10 @@ Route::middleware('auth:api')->group(function () {
     Route::post('wishlist/register', [WishListController::class, 'store']);
     Route::get('wishlist/show', [WishListController::class, 'index']);
     Route::delete('wishlist/delete', [WishListController::class, 'destroy']);
+    Route::post('cart/register', [CartController::class, 'store']);
+    Route::put('cart/update', [CartController::class, 'update']);
+    Route::get('cart/show', [CartController::class, 'index']);
+    Route::delete('cart/delete', [CartController::class, 'destroy']);
+    Route::post('payment/register', [PaymentController::class, 'store']);
+    Route::get('payment/show', [PaymentController::class, 'index']);
 });

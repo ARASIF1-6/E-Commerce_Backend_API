@@ -26,7 +26,7 @@ class User extends Authenticatable implements JWTSubject
         'location',
         'country',
         'type',
-        'filename',
+        'image',
     ];
 
     /**
@@ -75,5 +75,15 @@ class User extends Authenticatable implements JWTSubject
     public function wishlists()
     {
         return $this->hasMany(WishList::class, 'user_id', 'id');
+    }
+
+    public function carts()
+    {
+        return $this->hasMany(Cart::class, 'user_id', 'id');
+    }
+
+    public function payments()
+    {
+        return $this->hasMany(Payment::class, 'product_id', 'id');
     }
 }

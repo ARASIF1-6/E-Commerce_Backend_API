@@ -125,11 +125,10 @@ class AuthController extends Controller
             return response()->json(['message' => 'User not found'], 404);
         }
     
-        $data = collect($validateData)->except('image')->toArray();; // exclude image from mass update
-    
         if ($request->hasFile('image')) {
             $path = $request->file('image')->store('uploads', 'public');
-            $data['filename'] = $path;
+            $imageUrl = asset('storage/' . $path);
+            $validateData['image'] = $imageUrl;
         }
     
         $user->update($validateData);

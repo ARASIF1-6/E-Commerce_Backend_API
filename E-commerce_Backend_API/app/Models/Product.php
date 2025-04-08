@@ -16,7 +16,8 @@ class Product extends Model
         'description',
         'price',
         'stock',
-        'category_id'
+        'category_id',
+        'image'
     ];
     
     protected static function boot()
@@ -46,5 +47,15 @@ class Product extends Model
     public function wishlists()
     {
         return $this->hasMany(WishList::class, 'product_id', 'id');
+    }
+
+    public function carts()
+    {
+        return $this->hasMany(Cart::class, 'product_id', 'id');
+    }
+
+    public function payments()
+    {
+        return $this->hasMany(Payment::class, 'product_id', 'id');
     }
 }
